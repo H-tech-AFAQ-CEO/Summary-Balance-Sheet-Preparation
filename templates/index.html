@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balance Sheet Generator - QuickBooks Integration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0d0f14;
+    --paper: #f5f2ec;
+    --cream: #faf8f4;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: rgba(201,168,76,0.15);
+    --green: #2d7d5e;
+    --green-light: #3aa876;
+    --red: #c0392b;
+    --slate: #8b8f99;
+    --line: rgba(13,15,20,0.1);
+    --card: #ffffff;
+    --sidebar-w: 260px;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 100;
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .sidebar-logo {
+    padding: 32px 28px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--gold);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: var(--ink);
+    font-weight: 700;
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 20px 0;
+    overflow-y: auto;
+  }
+
+  .nav-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    padding: 16px 28px 8px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 28px;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    position: relative;
+  }
+
+  .nav-item i {
+    width: 18px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .nav-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.04); }
+
+  .nav-item.active {
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--gold);
+    border-radius: 0 3px 3px 0;
+  }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .sidebar-footer {
+    padding: 20px 28px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .user-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: var(--ink);
+  }
+
+  .user-name { font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 500; }
+  .user-role { font-size: 10px; color: rgba(255,255,255,0.3); font-family: 'DM Mono', monospace; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    height: 68px;
+    background: var(--cream);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    padding: 0 36px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .topbar-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--slate);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 4px 12px;
+    border-radius: 4px;
+  }
+
+  .topbar-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Syne', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink);
+  }
+
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--ink);
+  }
+
+  .btn-primary:hover { background: var(--gold-light); }
+
+  .topbar-icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--slate);
+    transition: all 0.2s;
+  }
+
+  .topbar-icon:hover { color: var(--ink); border-color: var(--ink); }
+
+  .notif-dot {
+    position: relative;
+  }
+
+  .notif-dot::after {
+    content: '';
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 7px; height: 7px;
+    background: var(--gold);
+    border-radius: 50%;
+    border: 2px solid var(--cream);
+  }
+
+  /* ── PAGE CONTENT ── */
+  .page-content {
+    padding: 36px;
+    flex: 1;
+  }
+
+  /* ── CONNECTION STATUS ── */
+  .connection-status {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .status-indicator {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-indicator.connected { background: var(--green); }
+  .status-indicator.disconnected { background: var(--red); }
+
+  .status-text {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .status-details {
+    font-size: 12px;
+    color: var(--slate);
+    margin-top: 4px;
+  }
+
+  /* ── GENERATE SECTION ── */
+  .generate-section {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+
+  .date-input-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .date-input {
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+  }
+
+  .generate-btn {
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .generate-btn:hover { background: var(--gold-light); }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── RESULTS SECTION ── */
+  .results-section {
+    display: none;
+    margin-bottom: 28px;
+  }
+
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .summary-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    text-align: center;
+  }
+
+  .summary-label {
+    font-size: 12px;
+    color: var(--slate);
+    margin-bottom: 8px;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .summary-value {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .balance-status {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .balance-status.balanced {
+    border-color: var(--green);
+    background: rgba(45,125,94,0.1);
+  }
+
+  .balance-status.unbalanced {
+    border-color: var(--red);
+    background: rgba(192,57,43,0.1);
+  }
+
+  .loading {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    margin-left: 8px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* ── BALANCE SHEET TABLE ── */
+  .panel {
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+
+  .panel-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .panel-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .panel-icon {
+    width: 36px; height: 36px;
+    background: var(--gold-dim);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+    font-size: 16px;
+  }
+
+  .bs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .bs-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--slate);
+    padding: 10px 24px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    background: var(--cream);
+    font-weight: 400;
+  }
+
+  .bs-table th:last-child { text-align: right; }
+
+  .bs-table td {
+    padding: 11px 24px;
+    border-bottom: 1px solid rgba(13,15,20,0.05);
+    vertical-align: middle;
+  }
+
+  .bs-table td:last-child {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+  }
+
+  .bs-section-row td {
+    background: var(--cream);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 8px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .bs-total-row td {
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    background: var(--ink);
+    color: #fff;
+  }
+
+  .bs-subtotal-row td {
+    font-weight: 600;
+    background: rgba(201,168,76,0.08);
+    border-top: 1px solid var(--gold);
+    color: var(--ink);
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+  .status-dot.green { background: var(--green); }
+  .status-dot.red { background: var(--red); }
+  .status-dot.gold { background: var(--gold); }
+
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+
+  /* ── RECONCILIATION NOTES ── */
+  .recon-list {
+    padding: 0 24px 16px;
+  }
+
+  .recon-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: flex-start;
+  }
+
+  .recon-item:last-child { border-bottom: none; }
+
+  .recon-icon {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .recon-icon.warn { background: rgba(201,168,76,0.15); color: var(--gold); }
+  .recon-icon.ok   { background: rgba(45,125,94,0.12); color: var(--green); }
+  .recon-icon.info { background: rgba(13,15,20,0.07); color: var(--slate); }
+
+  .recon-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .recon-desc  { font-size: 11px; color: var(--slate); line-height: 1.5; }
+  .recon-amount {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ── QUICK ACTIONS ── */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 20px 24px;
+  }
+
+  .action-tile {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .action-tile:hover {
+    border-color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  .action-tile i {
+    font-size: 20px;
+    color: var(--gold);
+  }
+
+  .action-tile-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* ── FLASH MESSAGES ── */
+  .flash-messages {
+    position: fixed;
+    top: 80px;
+    right: 36px;
+    z-index: 1000;
+  }
+
+  .flash-message {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 300px;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  .flash-message.success { border-color: var(--green); color: var(--green); }
+  .flash-message.error { border-color: var(--red); color: var(--red); }
+  .flash-message.warning { border-color: var(--gold); color: var(--gold); }
+
+  .table-scroll { overflow-x: auto; }
+
+  @media (max-width: 1200px) {
+    .summary-cards { grid-template-columns: repeat(2, 1fr); }
+    .quick-actions { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .main { margin-left: 0; }
+    .summary-cards { grid-template-columns: 1fr; }
+    .quick-actions { grid-template-columns: 1fr; }
+    .page-content { padding: 20px; }
+    .topbar { padding: 0 20px; }
+    .flash-messages { right: 20px; }
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- Flash Messages Container -->
+<div class="flash-messages" id="flash-messages"></div>
+
+<!-- Sidebar - Simplified to match app.py functionality -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">BS</div>
+      <div>
+        <div class="logo-text">Balance Sheet</div>
+        <div class="logo-sub">Generator</div>
+      </div>
+    </div>
+  </div>
+  
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a href="#" class="nav-item active" onclick="showDashboard()">
+      <i class="fas fa-chart-line"></i>
+      <span>Dashboard</span>
+    </a>
+    
+    <div class="nav-section-label">QuickBooks</div>
+    <a href="#" class="nav-item" id="qbo-connection-item">
+      <i class="fas fa-link"></i>
+      <span>Connection</span>
+      <span class="nav-badge" id="qbo-status-badge">Offline</span>
+    </a>
+    
+    <div class="nav-section-label">Reports</div>
+    <a href="#" class="nav-item" onclick="exportPDF()">
+      <i class="fas fa-file-pdf"></i>
+      <span>Export PDF</span>
+    </a>
+    <a href="#" class="nav-item" onclick="exportExcel()">
+      <i class="fas fa-file-excel"></i>
+      <span>Export Excel</span>
+    </a>
+  </nav>
+  
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">A</div>
+      <div>
+        <div class="user-name">Admin User</div>
+        <div class="user-role">Administrator</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main">
+  <!-- Topbar -->
+  <header class="topbar">
+    <h1 class="topbar-title">Balance Sheet Generator</h1>
+    <div class="topbar-period" id="current-period">
+      <span id="current-date-display"></span>
+    </div>
+    
+    <div class="topbar-actions">
+      <button class="btn btn-outline" onclick="exportPDF()">
+        <i class="fas fa-file-pdf"></i>
+        PDF
+      </button>
+      <button class="btn btn-outline" onclick="exportExcel()">
+        <i class="fas fa-file-excel"></i>
+        Excel
+      </button>
+      <button class="btn btn-primary" onclick="refreshData()">
+        <i class="fas fa-sync-alt"></i>
+        Refresh
+      </button>
+    </div>
+  </header>
+
+  <!-- Page Content -->
+  <div class="page-content" id="dashboard-view">
+    
+    <!-- Connection Status -->
+    <div class="connection-status" id="connection-status">
+      <div class="status-indicator disconnected" id="status-indicator"></div>
+      <div>
+        <div class="status-text" id="status-text">QuickBooks Disconnected</div>
+        <div class="status-details" id="status-details">Connect to QuickBooks to generate balance sheets</div>
+      </div>
+      <button class="btn btn-primary" id="connect-btn" onclick="connectQuickBooks()">
+        Connect to QuickBooks
+      </button>
+    </div>
+
+    <!-- Generate Section -->
+    <div class="generate-section">
+      <h3 style="margin-bottom: 16px;">Generate Balance Sheet</h3>
+      <div class="date-input-group">
+        <label style="font-weight: 600;">As of Date:</label>
+        <input type="date" class="date-input" id="as-of-date">
+        <button class="generate-btn" id="generate-btn" onclick="generateBalanceSheet()">
+          <span id="generate-text">Generate Balance Sheet</span>
+          <span class="loading" id="loading-spinner" style="display: none;"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-section" id="results-section">
+      <!-- Summary Cards -->
+      <div class="summary-cards">
+        <div class="summary-card">
+          <div class="summary-label">Total Assets</div>
+          <div class="summary-value" id="total-assets">$0</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Total Liabilities</div>
+          <div class="summary-value" id="total-liabilities">$0</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Total Equity</div>
+          <div class="summary-value" id="total-equity">$0</div>
+        </div>
+      </div>
+
+      <!-- Balance Status -->
+      <div class="balance-status" id="balance-status">
+        <h4 id="balance-status-text">Checking Balance...</h4>
+        <p id="balance-difference"></p>
+      </div>
+    </div>
+
+    <!-- Balance Sheet Table -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon"><i class="fas fa-scale-balanced"></i></div>
+        <div class="panel-title">Detailed Balance Sheet</div>
+      </div>
+      <div class="table-scroll">
+        <table class="bs-table" id="balance-sheet-table">
+          <thead>
+            <tr>
+              <th style="width:55%">Account</th>
+              <th>Status</th>
+              <th>Amount (USD)</th>
+            </tr>
+          </thead>
+          <tbody id="balance-sheet-body">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Reconciliation Notes -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon"><i class="fas fa-clipboard-check"></i></div>
+        <div class="panel-title">Reconciliation Notes</div>
+      </div>
+      <div class="recon-list" id="reconciliation-notes">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon"><i class="fas fa-bolt"></i></div>
+        <div class="panel-title">Quick Actions</div>
+      </div>
+      <div class="quick-actions">
+        <div class="action-tile" onclick="exportPDF()">
+          <i class="fas fa-file-pdf"></i>
+          <div class="action-tile-label">Export PDF</div>
+        </div>
+        <div class="action-tile" onclick="exportExcel()">
+          <i class="fas fa-file-excel"></i>
+          <div class="action-tile-label">Export Excel</div>
+        </div>
+        <div class="action-tile" onclick="refreshData()">
+          <i class="fas fa-sync-alt"></i>
+          <div class="action-tile-label">Refresh Data</div>
+        </div>
+        <div class="action-tile" onclick="generateBalanceSheet()">
+          <i class="fas fa-chart-line"></i>
+          <div class="action-tile-label">Generate New</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// Global variables
+let currentBalanceSheet = null;
+let qboConnected = false;
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+  checkQBOStatus();
+  setDefaultDate();
+  loadBalanceSheet();
+  loadReconciliationNotes();
+  updateCurrentDate();
+});
+
+// Set default date to today
+function setDefaultDate() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('as-of-date').value = today;
+}
+
+// Update current date display
+function updateCurrentDate() {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const today = new Date().toLocaleDateString('en-US', options);
+  document.getElementById('current-date-display').textContent = today;
+}
+
+// Check QuickBooks connection status
+async function checkQBOStatus() {
+  try {
+    const response = await fetch('/api/qbo-status');
+    const data = await response.json();
+    updateConnectionStatus(data);
+  } catch (error) {
+    console.error('Error checking QBO status:', error);
+    updateConnectionStatus({ connected: false });
+  }
+}
+
+// Update connection status display
+function updateConnectionStatus(data) {
+  const indicator = document.getElementById('status-indicator');
+  const text = document.getElementById('status-text');
+  const details = document.getElementById('status-details');
+  const connectBtn = document.getElementById('connect-btn');
+  const badge = document.getElementById('qbo-status-badge');
+  
+  if (data.connected) {
+    qboConnected = true;
+    indicator.className = 'status-indicator connected';
+    text.textContent = 'QuickBooks Connected';
+    details.textContent = `Connected to ${data.company_name || 'Company'}`;
+    connectBtn.textContent = 'Disconnect';
+    connectBtn.onclick = disconnectQuickBooks;
+    badge.textContent = 'Online';
+    badge.style.background = 'var(--green)';
+  } else {
+    qboConnected = false;
+    indicator.className = 'status-indicator disconnected';
+    text.textContent = 'QuickBooks Disconnected';
+    details.textContent = 'Connect to QuickBooks to generate balance sheets';
+    connectBtn.textContent = 'Connect to QuickBooks';
+    connectBtn.onclick = connectQuickBooks;
+    badge.textContent = 'Offline';
+    badge.style.background = 'var(--red)';
+  }
+}
+
+// Connect to QuickBooks
+function connectQuickBooks() {
+  window.location.href = '/connect/qbo';
+}
+
+// Disconnect from QuickBooks
+function disconnectQuickBooks() {
+  if (confirm('Are you sure you want to disconnect from QuickBooks?')) {
+    alert('Disconnect functionality would be implemented here');
+    checkQBOStatus();
+  }
+}
+
+// Generate balance sheet
+async function generateBalanceSheet() {
+  if (!qboConnected) {
+    showMessage('Please connect to QuickBooks first.', 'warning');
+    return;
+  }
+  
+  const generateBtn = document.getElementById('generate-btn');
+  const generateText = document.getElementById('generate-text');
+  const loadingSpinner = document.getElementById('loading-spinner');
+  
+  // Show loading state
+  generateBtn.disabled = true;
+  generateText.style.display = 'none';
+  loadingSpinner.style.display = 'inline-block';
+  
+  try {
+    const formData = new FormData();
+    const asOfDate = document.getElementById('as-of-date').value;
+    if (asOfDate) {
+      formData.append('as_of_date', asOfDate);
+    }
+    
+    const response = await fetch('/generate-balance-sheet', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      currentBalanceSheet = result;
+      displayResults(result);
+      showMessage('Balance sheet generated successfully!', 'success');
+    } else {
+      showMessage(result.error || 'Error generating balance sheet', 'error');
+    }
+  } catch (error) {
+    console.error('Error generating balance sheet:', error);
+    showMessage('Error generating balance sheet. Please try again.', 'error');
+  } finally {
+    // Hide loading state
+    generateBtn.disabled = false;
+    generateText.style.display = 'inline';
+    loadingSpinner.style.display = 'none';
+  }
+}
+
+// Load existing balance sheet
+async function loadBalanceSheet() {
+  try {
+    const response = await fetch('/api/balance-sheet');
+    const data = await response.json();
+    
+    if (data && data.totals) {
+      currentBalanceSheet = { balance_sheet: data };
+      displayResults({ balance_sheet: data });
+      updateBalanceSheetTable(data);
+    }
+  } catch (error) {
+    console.error('Error loading balance sheet:', error);
+  }
+}
+
+// Load reconciliation notes
+async function loadReconciliationNotes() {
+  try {
+    const response = await fetch('/api/reconciliation-notes');
+    const notes = await response.json();
+    updateReconciliationNotesDisplay(notes);
+  } catch (error) {
+    console.error('Error loading reconciliation notes:', error);
+  }
+}
+
+// Display results
+function displayResults(data) {
+  const resultsSection = document.getElementById('results-section');
+  const bs = data.balance_sheet || {};
+  
+  resultsSection.style.display = 'block';
+  
+  // Update summary cards
+  document.getElementById('total-assets').textContent = formatCurrency(bs.total_assets || 0);
+  document.getElementById('total-liabilities').textContent = formatCurrency(bs.total_liabilities || 0);
+  document.getElementById('total-equity').textContent = formatCurrency(bs.total_equity || 0);
+  
+  // Update balance status
+  const balanceStatus = document.getElementById('balance-status');
+  const statusText = document.getElementById('balance-status-text');
+  const difference = document.getElementById('balance-difference');
+  
+  const totalAssets = bs.total_assets || 0;
+  const totalLiabilities = bs.total_liabilities || 0;
+  const totalEquity = bs.total_equity || 0;
+  const diff = Math.abs(totalAssets - (totalLiabilities + totalEquity));
+  
+  if (diff < 0.01) {
+    balanceStatus.className = 'balance-status balanced';
+    statusText.textContent = '✓ Balance Sheet is Balanced';
+    difference.textContent = 'Assets = Liabilities + Equity';
+  } else {
+    balanceStatus.className = 'balance-status unbalanced';
+    statusText.textContent = '⚠ Balance Sheet Out of Balance';
+    difference.textContent = `Difference: ${formatCurrency(diff)}`;
+  }
+}
+
+// Update balance sheet table
+function updateBalanceSheetTable(data) {
+  const tbody = document.getElementById('balance-sheet-body');
+  if (!tbody) return;
+  
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
+  };
+  
+  const getStatusDot = (status) => {
+    const statusMap = {
+      'reconciled': 'green',
+      'pending': 'gold',
+      'adjusted': 'gold',
+      'open_item': 'red'
+    };
+    return `<span class="status-dot ${statusMap[status] || 'gold'}"></span>`;
+  };
+  
+  const getStatusText = (status) => {
+    const statusMap = {
+      'reconciled': 'RECONCILED',
+      'pending': 'PENDING',
+      'adjusted': 'ADJUSTED',
+      'open_item': 'OPEN ITEM'
+    };
+    return statusMap[status] || 'PENDING';
+  };
+  
+  const getStatusColor = (status) => {
+    if (status === 'reconciled') return 'var(--green)';
+    if (status === 'open_item') return 'var(--red)';
+    return 'var(--gold)';
+  };
+  
+  let html = '';
+  
+  // Assets Section
+  html += `<tr class="bs-section-row">
+    <td colspan="3"><i class="fa-solid fa-coins" style="margin-right:8px;color:var(--gold)"></i>ASSETS</td>
+  </tr>`;
+  
+  // Current Assets
+  if (data.accounts && data.accounts.assets && data.accounts.assets.current) {
+    data.accounts.assets.current.forEach(account => {
+      html += `<tr>
+        <td>${getStatusDot(account.status)}${account.name}</td>
+        <td><span style="font-size:10px;color:${getStatusColor(account.status)};font-family:'DM Mono',monospace;">${getStatusText(account.status)}</span></td>
+        <td>${formatCurrency(account.balance)}</td>
+      </tr>`;
+    });
+  }
+  
+  html += `<tr class="bs-subtotal-row">
+    <td colspan="2"><strong>Total Current Assets</strong></td>
+    <td><strong>${formatCurrency(data.totals.current_assets || 0)}</strong></td>
+  </tr>`;
+  
+  // Non-Current Assets
+  if (data.accounts && data.accounts.assets && data.accounts.assets.non_current) {
+    data.accounts.assets.non_current.forEach(account => {
+      html += `<tr>
+        <td>${getStatusDot(account.status)}${account.name}</td>
+        <td><span style="font-size:10px;color:${getStatusColor(account.status)};font-family:'DM Mono',monospace;">${getStatusText(account.status)}</span></td>
+        <td>${formatCurrency(account.balance)}</td>
+      </tr>`;
+    });
+  }
+  
+  html += `<tr class="bs-subtotal-row">
+    <td colspan="2"><strong>Total Non-Current Assets</strong></td>
+    <td><strong>${formatCurrency(data.totals.non_current_assets || 0)}</strong></td>
+  </tr>`;
+  
+  html += `<tr class="bs-total-row">
+    <td colspan="2">TOTAL ASSETS</td>
+    <td>${formatCurrency(data.totals.total_assets || 0)}</td>
+  </tr>`;
+  
+  // Liabilities Section
+  html += `<tr class="bs-section-row">
+    <td colspan="3"><i class="fa-solid fa-file-invoice" style="margin-right:8px;color:var(--red)"></i>LIABILITIES</td>
+  </tr>`;
+  
+  // Current Liabilities
+  if (data.accounts && data.accounts.liabilities && data.accounts.liabilities.current) {
+    data.accounts.liabilities.current.forEach(account => {
+      html += `<tr>
+        <td>${getStatusDot(account.status)}${account.name}</td>
+        <td><span style="font-size:10px;color:${getStatusColor(account.status)};font-family:'DM Mono',monospace;">${getStatusText(account.status)}</span></td>
+        <td class="neg">${formatCurrency(account.balance)}</td>
+      </tr>`;
+    });
+  }
+  
+  html += `<tr class="bs-subtotal-row">
+    <td colspan="2"><strong>Total Current Liabilities</strong></td>
+    <td><strong>${formatCurrency(data.totals.current_liabilities || 0)}</strong></td>
+  </tr>`;
+  
+  // Non-Current Liabilities
+  if (data.accounts && data.accounts.liabilities && data.accounts.liabilities.non_current) {
+    data.accounts.liabilities.non_current.forEach(account => {
+      html += `<tr>
+        <td>${getStatusDot(account.status)}${account.name}</td>
+        <td><span style="font-size:10px;color:${getStatusColor(account.status)};font-family:'DM Mono',monospace;">${getStatusText(account.status)}</span></td>
+        <td class="neg">${formatCurrency(account.balance)}</td>
+      </tr>`;
+    });
+  }
+  
+  html += `<tr class="bs-subtotal-row">
+    <td colspan="2"><strong>Total Non-Current Liabilities</strong></td>
+    <td><strong>${formatCurrency(data.totals.non_current_liabilities || 0)}</strong></td>
+  </tr>`;
+  
+  html += `<tr class="bs-total-row">
+    <td colspan="2">TOTAL LIABILITIES</td>
+    <td>${formatCurrency(data.totals.total_liabilities || 0)}</td>
+  </tr>`;
+  
+  // Equity Section
+  html += `<tr class="bs-section-row">
+    <td colspan="3"><i class="fa-solid fa-seedling" style="margin-right:8px;color:var(--green)"></i>OWNER'S EQUITY</td>
+  </tr>`;
+  
+  if (data.accounts && data.accounts.equity) {
+    data.accounts.equity.forEach(account => {
+      html += `<tr>
+        <td>${getStatusDot(account.status)}${account.name}</td>
+        <td><span style="font-size:10px;color:${getStatusColor(account.status)};font-family:'DM Mono',monospace;">${getStatusText(account.status)}</span></td>
+        <td>${formatCurrency(account.balance)}</td>
+      </tr>`;
+    });
+  }
+  
+  html += `<tr class="bs-total-row">
+    <td colspan="2">TOTAL EQUITY</td>
+    <td>${formatCurrency(data.totals.total_equity || 0)}</td>
+  </tr>`;
+  
+  html += `<tr class="bs-total-row" style="background:var(--gold);color:var(--ink)">
+    <td colspan="2" style="color:var(--ink);font-size:14px;font-weight:700">TOTAL LIABILITIES + EQUITY</td>
+    <td style="color:var(--ink);font-size:14px;font-weight:700">${formatCurrency(data.totals.total_assets || 0)} ✓</td>
+  </tr>`;
+  
+  tbody.innerHTML = html;
+}
+
+// Update reconciliation notes display
+function updateReconciliationNotesDisplay(notes) {
+  const reconList = document.getElementById('reconciliation-notes');
+  if (!reconList) return;
+  
+  const getIconClass = (noteType) => {
+    const iconMap = {
+      'adjustment': 'warn',
+      'open_item': 'warn',
+      'info': 'info'
+    };
+    return iconMap[noteType] || 'info';
+  };
+  
+  const getIcon = (noteType) => {
+    const iconMap = {
+      'adjustment': 'fa-triangle-exclamation',
+      'open_item': 'fa-clock-rotate-left',
+      'info': 'fa-circle-info'
+    };
+    return iconMap[noteType] || 'fa-circle-info';
+  };
+  
+  const formatAmount = (amount) => {
+    if (amount === 0) return '<span style="color:var(--slate)">REVIEW</span>';
+    const formatted = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(Math.abs(amount));
+    return amount < 0 ? `<span class="neg">−${formatted}</span>` : `<span class="pos">+${formatted}</span>`;
+  };
+  
+  if (!notes || notes.length === 0) {
+    reconList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--slate);">No reconciliation notes</div>';
+    return;
+  }
+  
+  let html = '';
+  notes.forEach(note => {
+    const iconClass = getIconClass(note.note_type);
+    const icon = getIcon(note.note_type);
+    
+    html += `<div class="recon-item">
+      <div class="recon-icon ${iconClass}"><i class="fa-solid ${icon}"></i></div>
+      <div>
+        <div class="recon-title">${note.title}</div>
+        <div class="recon-desc">${note.description}</div>
+      </div>
+      <div class="recon-amount">${formatAmount(note.amount)}</div>
+    </div>`;
+  });
+  
+  reconList.innerHTML = html;
+}
+
+// Export functions
+async function exportPDF() {
+  if (!currentBalanceSheet) {
+    showMessage('Please generate a balance sheet first.', 'warning');
+    return;
+  }
+  window.open('/api/export/pdf', '_blank');
+}
+
+async function exportExcel() {
+  if (!currentBalanceSheet) {
+    showMessage('Please generate a balance sheet first.', 'warning');
+    return;
+  }
+  window.open('/api/export/excel', '_blank');
+}
+
+// Refresh data
+function refreshData() {
+  checkQBOStatus();
+  loadBalanceSheet();
+  loadReconciliationNotes();
+  showMessage('Data refreshed', 'success');
+}
+
+// Show dashboard (simplified navigation)
+function showDashboard() {
+  // Just update active state
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  document.querySelector('[onclick="showDashboard()"]').classList.add('active');
+}
+
+// Utility functions
+function formatCurrency(amount) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount || 0);
+}
+
+function showMessage(message, type) {
+  const flashMessages = document.getElementById('flash-messages');
+  const messageId = 'msg-' + Date.now();
+  
+  const messageHtml = `
+    <div id="${messageId}" class="flash-message ${type}">
+      ${message}
+    </div>
+  `;
+  
+  flashMessages.insertAdjacentHTML('beforeend', messageHtml);
+  
+  // Auto-remove after 5 seconds
+  setTimeout(() => {
+    const element = document.getElementById(messageId);
+    if (element) {
+      element.style.animation = 'slideIn 0.3s reverse';
+      setTimeout(() => element.remove(), 300);
+    }
+  }, 5000);
+}
+
+// Navigation
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Quick Actions
+document.querySelectorAll('.action-tile').forEach(tile => {
+  tile.addEventListener('click', function() {
+    this.style.transform = 'scale(0.97)';
+    setTimeout(() => this.style.transform = '', 150);
+  });
+});
+</script>
+</body>
+</html>

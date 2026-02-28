@@ -1,0 +1,112 @@
+2026-02-19 14:24:48,422 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.33.113:5000
+2026-02-19 14:24:48,424 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-02-19 14:24:48,428 - werkzeug - INFO -  * Restarting with stat
+2026-02-19 14:24:51,599 - werkzeug - WARNING -  * Debugger is active!
+2026-02-19 14:24:51,647 - werkzeug - INFO -  * Debugger PIN: 465-701-508
+2026-02-19 14:25:30,383 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:25:30] "GET / HTTP/1.1" 200 -
+2026-02-19 14:25:32,103 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:25:32] "[33mGET /api/qbo-status HTTP/1.1[0m" 404 -
+2026-02-19 14:25:47,894 - werkzeug - INFO -  * Detected change in '/Users/macos/Desktop/Summary Balance Sheet Preparation/app.py', reloading
+2026-02-19 14:25:48,581 - werkzeug - INFO -  * Restarting with stat
+2026-02-19 14:25:53,267 - werkzeug - WARNING -  * Debugger is active!
+2026-02-19 14:25:53,308 - werkzeug - INFO -  * Debugger PIN: 465-701-508
+2026-02-19 14:26:27,424 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:26:27] "GET / HTTP/1.1" 200 -
+2026-02-19 14:26:27,604 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:26:27] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:26:27,622 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:26:27] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 14:26:42,176 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:26:42] "GET / HTTP/1.1" 200 -
+2026-02-19 14:26:42,507 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:26:42] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:26:42,508 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:26:42] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 14:26:46,027 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:26:46] "GET / HTTP/1.1" 200 -
+2026-02-19 14:26:46,242 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:26:46] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:26:46,277 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:26:46] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 14:28:32,245 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:28:32] "GET / HTTP/1.1" 200 -
+2026-02-19 14:28:32,629 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:28:32] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:28:32,642 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:28:32] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 14:30:57,799 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:30:57] "GET / HTTP/1.1" 200 -
+2026-02-19 14:30:58,577 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:30:58] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:30:58,587 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:30:58] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 14:35:31,222 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:35:31] "GET / HTTP/1.1" 200 -
+2026-02-19 14:35:32,684 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:35:32] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:35:32,686 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:35:32] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 14:35:54,402 - werkzeug - INFO -  * Detected change in '/Users/macos/Desktop/Summary Balance Sheet Preparation/app.py', reloading
+2026-02-19 14:35:56,164 - werkzeug - INFO -  * Restarting with stat
+2026-02-19 14:36:04,270 - werkzeug - WARNING -  * Debugger is active!
+2026-02-19 14:36:04,333 - werkzeug - INFO -  * Debugger PIN: 465-701-508
+2026-02-19 14:36:34,608 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:36:34] "GET / HTTP/1.1" 200 -
+2026-02-19 14:36:34,733 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:36:34] "GET /api/qbo-status HTTP/1.1" 200 -
+2026-02-19 14:36:34,799 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:36:34] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:36:34,801 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:36:34] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 14:36:34,901 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:36:34] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:36:45,068 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:36:45] "[33mGET /connect/qbo HTTP/1.1[0m" 404 -
+2026-02-19 14:37:30,610 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:37:30] "GET / HTTP/1.1" 200 -
+2026-02-19 14:37:31,047 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:37:31] "GET /api/qbo-status HTTP/1.1" 200 -
+2026-02-19 14:37:31,053 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:37:31] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:37:31,061 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:37:31] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 14:37:31,068 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:37:31] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:39:06,350 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:39:06] "GET / HTTP/1.1" 200 -
+2026-02-19 14:39:06,496 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:39:06] "GET /api/qbo-status HTTP/1.1" 200 -
+2026-02-19 14:39:06,537 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:39:06] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:39:06,550 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:39:06] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 14:39:06,562 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:39:06] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:44:08,022 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:44:08] "GET / HTTP/1.1" 200 -
+2026-02-19 14:44:08,455 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:44:08] "GET /api/qbo-status HTTP/1.1" 200 -
+2026-02-19 14:44:08,495 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:44:08] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 14:44:08,498 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:44:08] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 14:44:21,970 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 14:44:21] "[31m[1mGET /api/export/pdf HTTP/1.1[0m" 400 -
+2026-02-19 14:47:46,850 - werkzeug - INFO -  * Detected change in '/Users/macos/Desktop/Summary Balance Sheet Preparation/app.py', reloading
+2026-02-19 14:47:48,228 - werkzeug - INFO -  * Restarting with stat
+2026-02-19 15:04:55,111 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.33.113:5000
+2026-02-19 15:04:55,115 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-02-19 15:04:55,118 - werkzeug - INFO -  * Restarting with stat
+2026-02-19 15:04:58,455 - werkzeug - WARNING -  * Debugger is active!
+2026-02-19 15:04:58,485 - werkzeug - INFO -  * Debugger PIN: 465-701-508
+2026-02-19 15:04:58,844 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:04:58] "GET / HTTP/1.1" 200 -
+2026-02-19 15:04:59,296 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:04:59] "GET /api/qbo-status HTTP/1.1" 200 -
+2026-02-19 15:04:59,306 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:04:59] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 15:04:59,330 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:04:59] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 15:05:10,373 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:05:10] "[31m[1mGET /api/export/pdf HTTP/1.1[0m" 400 -
+2026-02-19 15:06:05,584 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:06:05] "GET / HTTP/1.1" 200 -
+2026-02-19 15:06:05,753 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:06:05] "GET /api/qbo-status HTTP/1.1" 200 -
+2026-02-19 15:06:05,786 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:06:05] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 15:06:05,795 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:06:05] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 15:07:05,056 - werkzeug - INFO -  * Detected change in '/Users/macos/Desktop/Summary Balance Sheet Preparation/app.py', reloading
+2026-02-19 15:07:06,902 - werkzeug - INFO -  * Restarting with stat
+2026-02-19 15:07:16,310 - werkzeug - WARNING -  * Debugger is active!
+2026-02-19 15:07:16,354 - werkzeug - INFO -  * Debugger PIN: 465-701-508
+2026-02-19 15:07:52,427 - werkzeug - INFO -  * Detected change in '/Users/macos/Desktop/Summary Balance Sheet Preparation/app.py', reloading
+2026-02-19 15:07:53,762 - werkzeug - INFO -  * Restarting with stat
+2026-02-19 15:08:01,648 - werkzeug - WARNING -  * Debugger is active!
+2026-02-19 15:08:01,692 - werkzeug - INFO -  * Debugger PIN: 465-701-508
+2026-02-19 15:08:04,304 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:08:04] "GET / HTTP/1.1" 200 -
+2026-02-19 15:08:04,615 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:08:04] "GET /api/qbo-status HTTP/1.1" 200 -
+2026-02-19 15:08:04,715 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:08:04] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 15:08:04,720 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:08:04] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 15:10:09,980 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:09] "GET / HTTP/1.1" 200 -
+2026-02-19 15:10:10,263 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:10] "GET /api/qbo-status HTTP/1.1" 200 -
+2026-02-19 15:10:10,283 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:10] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 15:10:10,284 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:10] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 15:10:20,580 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:20] "GET /api/qbo-status HTTP/1.1" 200 -
+2026-02-19 15:10:20,592 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:20] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 15:10:20,597 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:20] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 15:10:22,119 - werkzeug - INFO -  * Detected change in '/Users/macos/Desktop/Summary Balance Sheet Preparation/app.py', reloading
+2026-02-19 15:10:23,181 - werkzeug - INFO -  * Restarting with stat
+2026-02-19 15:10:28,545 - werkzeug - WARNING -  * Debugger is active!
+2026-02-19 15:10:28,593 - werkzeug - INFO -  * Debugger PIN: 465-701-508
+2026-02-19 15:10:36,250 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:36] "GET / HTTP/1.1" 200 -
+2026-02-19 15:10:36,401 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:36] "GET /api/qbo-status HTTP/1.1" 200 -
+2026-02-19 15:10:36,465 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:36] "GET /api/balance-sheet HTTP/1.1" 200 -
+2026-02-19 15:10:36,480 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:36] "GET /api/reconciliation-notes HTTP/1.1" 200 -
+2026-02-19 15:10:40,722 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:40] "[35m[1mGET /connect/qbo HTTP/1.1[0m" 500 -
+2026-02-19 15:10:40,912 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:40] "GET /connect/qbo?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2026-02-19 15:10:40,913 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:40] "GET /connect/qbo?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2026-02-19 15:10:41,102 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:41] "GET /connect/qbo?__debugger__=yes&cmd=resource&f=console.png&s=lXbqlPOlNx9XfL8AsTxh HTTP/1.1" 200 -
+2026-02-19 15:10:41,464 - werkzeug - INFO - 127.0.0.1 - - [19/Feb/2026 15:10:41] "GET /connect/qbo?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2026-02-19 15:13:03,257 - werkzeug - INFO -  * Detected change in '/Users/macos/Desktop/Summary Balance Sheet Preparation/app.py', reloading
+2026-02-19 15:13:06,832 - werkzeug - INFO -  * Restarting with stat
+2026-02-19 15:13:12,550 - werkzeug - WARNING -  * Debugger is active!
+2026-02-19 15:13:12,613 - werkzeug - INFO -  * Debugger PIN: 465-701-508
